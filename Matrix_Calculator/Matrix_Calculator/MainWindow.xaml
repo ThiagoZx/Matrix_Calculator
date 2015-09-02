@@ -1,8 +1,16 @@
 ﻿<Window x:Class="Matrix_Calculator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Calculadora de Matrizes" Height="350" Width="525">
     <Grid>
-        
+        <TabControl Margin="10">
+            <TabItem Header="Preparação">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Representação">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>
