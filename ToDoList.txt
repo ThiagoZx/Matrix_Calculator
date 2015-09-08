@@ -1,6 +1,6 @@
 Sobre a calculadora de matriz:
 -Gerar matriz a partir de formula
--Escolher o tamanho dela
+-Escolher o tamanho dela <-- Du dis
 -Operações básicas
 -Multiplicação escalar
 -Pegar a inversa
@@ -9,3 +9,4 @@ Sobre a calculadora de matriz:
 -Mensagens de erros
 -Verificar se é inversa/simétrica
 -Rotação translação e escala de objetos (2D)
+-Matriz é de no máximo 10x10
