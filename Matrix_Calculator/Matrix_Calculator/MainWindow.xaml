@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Calculadora de Matrizes" Height="350" Width="525">
     <Grid>
-        <TabControl Margin="10">
+        <TabControl Margin="10" Name="CalcTabs">
             <!-- Tab para a demonstração das matrizes, escolha de valores e preparação das matrizes -->
             <TabItem Header="Preparação">
-                <Grid Background="#FFE5E5E5">
+                <Grid Name="Tab_01" Background="#FFE5E5E5">
                     <!-- Caixa com as possíveis operações funcionais pelo usuário-->
                     <ComboBox HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True">
                         <ListBoxItem Content="Soma"/>
@@ -20,8 +20,8 @@
                         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Colunas" VerticalAlignment="Top" Margin="135,55,0,0"/>
 
                         <!-- Colocar as linhas e colunas, respectivamente-->
-                        <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="10,75,0,0"/>
-                        <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="135,75,0,0"/>
+                        <TextBox HorizontalAlignment="Left" Height="23" Name="Line_Input" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="10,75,0,0"/>
+                        <TextBox HorizontalAlignment="Left" Height="23" Name="Column_Input" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="135,75,0,0"/>
       
                         <!-- Botão para gerar a matriz a partir dos parâmetros -->
                         <Button Content="Gerar" HorizontalAlignment="Left" Margin="280,75,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="generateGrid"/>
