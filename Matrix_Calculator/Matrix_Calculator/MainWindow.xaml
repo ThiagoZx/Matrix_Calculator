@@ -1,12 +1,13 @@
-﻿<Window x:Class="Matrix_Calculator.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Matrix_Calculator.MainWindow"
         Title="Calculadora de Matrizes" Height="350" Width="525">
     <Grid>
-        <TabControl Margin="10" Name="CalcTabs">
-            <!-- Tab para a demonstração das matrizes, escolha de valores e preparação das matrizes -->
-            <TabItem Header="Preparação">
-                <Grid Name="Tab_01" Background="#FFE5E5E5">
+        <TabControl Margin="10" x:Name="CalcTabs">
+            <!-- Tab para as operações básicas das matrizes -->
+            <TabItem Header="Operações Básicas">
+                <Grid x:Name="Tab_01" Background="#FFE5E5E5">
                     <!-- Caixa com as possíveis operações funcionais pelo usuário-->
                     <ComboBox HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True">
                         <ListBoxItem Content="Soma"/>
@@ -14,31 +15,35 @@
                     </ComboBox>
 
                     <!-- Teste_01: Montagem de uma matriz moldável pelo valor indicado no tamanho-->
-                    
-                        <!-- Texto indicando quais caixas de texto indicam qual o tamanho -->
-                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Linhas" VerticalAlignment="Top" Margin="10,55,0,0"/>
-                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Colunas" VerticalAlignment="Top" Margin="135,55,0,0"/>
 
-                        <!-- Colocar as linhas e colunas, respectivamente-->
-                        <TextBox HorizontalAlignment="Left" Height="23" Name="Line_Input" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="10,75,0,0"/>
-                        <TextBox HorizontalAlignment="Left" Height="23" Name="Column_Input" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="135,75,0,0"/>
-      
-                        <!-- Botão para gerar a matriz a partir dos parâmetros -->
-                        <Button Content="Gerar" HorizontalAlignment="Left" Margin="280,75,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="generateGrid"/>
-                    
+                    <!-- Texto indicando quais caixas de texto indicam qual o tamanho -->
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Linhas" VerticalAlignment="Top" Margin="10,55,0,0"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Colunas" VerticalAlignment="Top" Margin="135,55,0,0"/>
+
+                    <!-- Colocar as linhas e colunas, respectivamente-->
+                    <TextBox HorizontalAlignment="Left" Height="23" x:Name="Line_Input" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="10,75,0,0"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" x:Name="Column_Input" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="135,75,0,0"/>
+
+                    <!-- Botão para gerar a matriz a partir dos parâmetros -->
+                    <Button Content="Gerar" HorizontalAlignment="Left" Margin="280,75,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="generateGrid"/>
+
                     <!-- /Teste_01 -->
-                    
+
                 </Grid>
             </TabItem>
 
             <!-- Tab para a representação gráfica das matrizes em um plano cartesiano -->
             <TabItem Header="Representação">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <!-- Dá seu jeito com a representação =P -->
+                </Grid>
             </TabItem>
 
             <!-- Tab para usuários que não saibam como utilizar a calculadora ou a matéria em si-->
             <TabItem Header="Ajuda">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <!-- Simpático material didático aqui! -->    
+                </Grid>
             </TabItem>
         </TabControl>
 

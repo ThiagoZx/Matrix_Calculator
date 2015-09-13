@@ -20,6 +20,9 @@ namespace Matrix_Calculator
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private int matrix_ID = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,15 +41,19 @@ namespace Matrix_Calculator
                 for (int j = 1; j <= column_int; j++) {
 
                     TextBox tb = new TextBox();
-                    tb.Name = ("Matrix_" + i + "_" + j).ToString();
+                    tb.Name = ("Matrix_" + i + "_" + j + "_" + matrix_ID).ToString();
                     tb.Margin = new Thickness(0, 0, 50 + i * 45, 50 + j * 45);
                     tb.Width = 20; tb.Height = 20;
-                    Console.WriteLine(tb.TextAlignment.ToString());
+                    tb.Text = "0";
+
+                    Console.WriteLine(1 - (-1));
 
                     Tab_01.Children.Add(tb);
 
                 }
             }
+
+            matrix_ID = matrix_ID < 2 ? matrix_ID++ : matrix_ID = 0;
         }
     }
 }
