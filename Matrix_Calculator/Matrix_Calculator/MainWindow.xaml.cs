@@ -46,7 +46,7 @@ namespace Matrix_Calculator
                     tb.Width = 20; tb.Height = 20;
                     tb.Text = "0";
 
-                    Console.WriteLine(1 - (-1));
+                    Console.WriteLine(Convert.ToDouble("22,3"));
 
                     Tab_01.Children.Add(tb);
 
