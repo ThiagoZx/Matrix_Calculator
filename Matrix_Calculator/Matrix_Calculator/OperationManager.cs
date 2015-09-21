@@ -42,9 +42,9 @@ public class OperationManager : Window
         //Local onde colocaremos os resultados, em ordem hehe
         string[] results = new string[lines * columns];
 
-        for (int i = 0; i < lines; i++)
+        for (int i = 1; i <= lines; i++)
         {
-            for (int j = 0; j < columns; j++)
+            for (int j = 1; j <= columns; j++)
             {
                 //Convertendo os simpáticos textos para serem somados
                 double element_a = getValue("Matrix_" + i + "_" + j + "_1");
@@ -72,9 +72,9 @@ public class OperationManager : Window
         //Local onde colocaremos os resultados, em ordem hehe
         string[] results = new string[lines * columns];
 
-        for (int i = 0; i < lines; i++)
+        for (int i = 1; i <= lines; i++)
         {
-            for (int j = 0; j < columns; j++)
+            for (int j = 1; j <= columns; j++)
             {
                 //Convertendo os simpáticos textos para serem somados
                 double element_a = getValue("Matrix_" + i + "_" + j + "_1");
@@ -102,9 +102,9 @@ public class OperationManager : Window
         //Local onde colocaremos os resultados, em ordem hehe
         string[] results = new string[lines * columns];
 
-        for (int i = 0; i < lines; i++)
+        for (int i = 1; i <= lines; i++)
         {
-            for (int j = 0; j < columns; j++)
+            for (int j = 1; j <= columns; j++)
             {
                 //Convertendo os simpáticos textos para serem somados
                 double element_a = getValue("Matrix_" + i + "_" + j + "_1");
@@ -152,20 +152,24 @@ public class OperationManager : Window
         int[] values_1 = new int[lines_1 * columns_1];
         int[] values_2 = new int[lines_2 * columns_2];
 
-        for (int i = 0; i < lines_1; i++) {
-            for (int j = 0; j < columns_2; j++) {
+        for (int i = 1; i <= lines_1; i++) {
 
+            for (int j = 1; j <= columns_2; j++) {
 
-                //Convertendo os simpáticos textos para serem somados
-                double element_a = getValue("Matrix_" + i + "_" + j + "_1");
-                double element_b = getValue("Matrix_" + i + "_" + j + "_2");
+                double result = 0;
+                
+                for(int k = 1; k <= lines_2; k++){
+                    double element_a = getValue("Matrix_" + i + "_" + k + "_1");
+                    double element_b = getValue("Matrix_" + k + "_" + j + "_2");
 
-                //Soma =]
-                double result = (element_a) + (element_b);
+                     result = result + ((element_a) * (element_b));
+                }
+             
                 results[results.Length] = result.ToString();
+
             }
         }
-
+        
         return results;
     }
 }
