@@ -1,12 +1,19 @@
 Sobre a calculadora de matriz:
--Gerar matriz a partir de formula
--Escolher o tamanho dela <-- Du dis
--Operações básicas
--Multiplicação escalar
+-Escolher o tamanho dela <-- Done
+-Operações básicas <-- Done
+-Multiplicação escalar <-- Done
+-Transpor a matriz <-- Done
+
+-Mensagens de erros <-- Done
+
+-Matriz é de no máximo 10x10 <-- Done
+
+
 -Pegar a inversa
--Transpor a matriz
--Calcular o determinante
--Mensagens de erros
 -Verificar se é inversa/simétrica
+
+-Gerar matriz a partir de formula
+
 -Rotação translação e escala de objetos (2D)
--Matriz é de no máximo 10x10
+
+-Calcular o determinante
