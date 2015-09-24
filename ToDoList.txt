@@ -3,6 +3,7 @@ Sobre a calculadora de matriz:
 -Operações básicas <-- Done
 -Multiplicação escalar <-- Done
 -Transpor a matriz <-- Done
+-Matriz oposta <-- Done
 
 -Mensagens de erros <-- Done
 
