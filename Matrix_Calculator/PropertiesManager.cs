@@ -49,5 +49,18 @@ public class PropertiesManager : Window {
         return results;
     }
 
+    public bool isSimetric(string[] matrix) {
 
+        string[] trspd = this.transposed();
+
+        for (int i = 0; i < matrix.Length; i++) {
+            if (trspd[i] != matrix[i]) {
+                MessageBoxResult result = MessageBox.Show("Essa matriz não é simétrica!", "Calculadora diz:");
+                return false;
+            }
+        }
+
+        MessageBoxResult result = MessageBox.Show("Essa matriz é simétrica!", "Calculadora diz:");
+        return true;
+    }
 }
