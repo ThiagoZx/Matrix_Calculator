@@ -39,6 +39,11 @@ namespace Matrix_Calculator
             int lines_int = Convert.ToInt32(line.Text);
             int column_int = Convert.ToInt32(column.Text);
 
+            if ((lines_int > 10) || (column_int > 10)) {
+                MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes de até 10x10", "Calculadora diz:");
+                return;
+            }
+
             for (int i = 1; i <= lines_int; i++) {
                 for (int j = 1; j <= column_int; j++) {
 
