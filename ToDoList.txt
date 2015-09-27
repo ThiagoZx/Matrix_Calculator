@@ -8,8 +8,7 @@ Sobre a calculadora de matriz:
 -Verificar se é simétrica <-- Done
 -Mensagens de erros <-- Done
 -Matriz é de no máximo 10x10 <-- Done
-
--Calcular o determinante
+-Calcular o determinante <-- Done
 
 -Pegar a inversa
 -Verificar se é inversa
