@@ -9,9 +9,8 @@ Sobre a calculadora de matriz:
 -Mensagens de erros <-- Done
 -Matriz é de no máximo 10x10 <-- Done
 -Calcular o determinante <-- Done
-
--Pegar a inversa
--Verificar se é inversa
+-Pegar a inversa <-- Done
+-Verificar se é inversa <-- Done
 
 -Gerar matriz a partir de formula
 -Rotação translação e escala de objetos (2D)
