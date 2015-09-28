@@ -248,7 +248,7 @@ public class PropertiesManager : Window {
             return badresult;
         }
 
-        string cofactors = new string[lines * columns]
+        string cofactors = new string[lines * columns];
             
         for (int i = 1; i <= lines; i++) {
             for (int j = 1; j <= columns; j++) {

@@ -42,7 +42,18 @@
             <!-- Tab para usuários que não saibam como utilizar a calculadora ou a matéria em si-->
             <TabItem Header="Ajuda">
                 <Grid Background="#FFE5E5E5">
-                    <!-- Simpático material didático aqui! -->    
+                    <!-- Simpático material didático aqui! -->
+                    <Label x:Name="HeadLabel" Content="Olá, caro aprendiz!" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Label HorizontalAlignment="Left" Height="225" Margin="10,36,0,0" VerticalAlignment="Top" Width="346">
+                        <TextBlock x:Name="BodyLabel" TextWrapping="Wrap" Text="Nesta aba você pode aprender e tirar suas dúvidas sobre matrizes."/>
+                    </Label>
+                    <Button Content="Soma e Subtração" HorizontalAlignment="Left" Margin="361,60,0,0" VerticalAlignment="Top" Width="120" Click="HelpSumSub"/>
+                    <Button Content="Multiplicação" HorizontalAlignment="Left" Margin="361,85,0,0" VerticalAlignment="Top" Width="120" Click="HelpMult"/>
+                    <Button Content="Inversa e Simétrica" HorizontalAlignment="Left" Margin="361,135,0,0" VerticalAlignment="Top" Width="120" Click="HelpInvSim"/>
+                    <Button Content="Determinante" HorizontalAlignment="Left" Margin="361,160,0,0" VerticalAlignment="Top" Width="120" Click="HelpDeter"/>
+                    <Button Content="Transposta" HorizontalAlignment="Left" Margin="361,110,0,0" VerticalAlignment="Top" Width="120" Click="HelpTrans"/>
+                    <Button Content="Tipos" HorizontalAlignment="Left" Margin="361,35,0,0" VerticalAlignment="Top" Width="120" Click="HelpType"/>
+                    <Button Content="Geral" HorizontalAlignment="Left" Margin="361,10,0,0" VerticalAlignment="Top" Width="120" Click="HelpGeneral"/>
                 </Grid>
             </TabItem>
         </TabControl>

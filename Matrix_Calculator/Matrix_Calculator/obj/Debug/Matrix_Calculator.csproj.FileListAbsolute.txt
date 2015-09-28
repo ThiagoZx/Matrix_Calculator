@@ -37,3 +37,16 @@ C:\Users\Thiago\Documents\GitHub\Matrix_Calculator\Matrix_Calculator\Matrix_Calc
 C:\Users\Thiago\Documents\GitHub\Matrix_Calculator\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.g.resources
 C:\Users\Thiago\Documents\GitHub\Matrix_Calculator\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.Properties.Resources.resources
 C:\Users\Thiago\Documents\GitHub\Matrix_Calculator\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.csproj.GenerateResource.Cache
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\bin\Debug\Matrix_Calculator.exe.config
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.exe
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.pdb
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\bin\Debug\Matrix_Calculator.exe
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\bin\Debug\Matrix_Calculator.pdb
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.csprojResolveAssemblyReference.cache
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\MainWindow.baml
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\MainWindow.g.cs
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\App.g.cs
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator_MarkupCompile.cache
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.g.resources
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.Properties.Resources.resources
+C:\Users\Thiago\Desktop\Matrix_Calculator-master\Matrix_Calculator\Matrix_Calculator\obj\Debug\Matrix_Calculator.csproj.GenerateResource.Cache
