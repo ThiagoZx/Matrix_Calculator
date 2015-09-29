@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace Matrix_Calculator
 {
@@ -21,10 +22,19 @@ namespace Matrix_Calculator
         public MainWindow()
         {
             InitializeComponent();
+            DrawCartesianGrid(25, "#000000");
+
+            Polygon polygon = new Polygon();
+            polygon.FillRule = FillRule.Nonzero;
+            polygon.Fill = new SolidColorBrush(Colors.DarkOrchid);
+            polygon.Points = PointCollection;
+
+            Canvas.Children.Add(polygon);
         }
 
         OperationManager OprtnManager = new OperationManager();
         PropertiesManager PrprtsManager = new PropertiesManager();
+        public static PointCollection PointCollection = new PointCollection();
 
         // <Help Section>
 
@@ -444,5 +454,200 @@ namespace Matrix_Calculator
             
         }
 
+        public void DrawLine(int X1, int Y1, int X2, int Y2, String color, int thickness)
+        {
+            Line line = new Line();
+            line.X1 = X1;
+            line.X2 = X2;
+            line.Y1 = Y1;
+            line.Y2 = Y2;
+
+            line.StrokeThickness = thickness;
+            line.Stroke = (Brush)new BrushConverter().ConvertFromString(color);
+
+            Canvas.Children.Add(line);
+        }
+
+        private void Text(double x, double y, string text, Color color)
+        {
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = text;
+            textBlock.Foreground = new SolidColorBrush(color);
+            Canvas.SetLeft(textBlock, x);
+            Canvas.SetTop(textBlock, y);
+            Canvas.Children.Add(textBlock);
+        }
+
+        public void DrawCartesianGrid(int size, string color)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                DrawLine(size * i, 0, size * i, 250, color, 1);
+                DrawLine(0, size * i, 250, size * i, color, 1);
+            }
+
+            DrawLine(0, 250 / 2, 250, 250 / 2, "#AA0000", 1);
+            DrawLine(250 / 2, 0, 250 / 2, 250, "#AA0000", 1);
+        }
+
+        public Point GetMousePositionCanvas()
+        {
+            Point point = Mouse.GetPosition(Canvas);
+            Text(point.X, point.Y, "(" + (point.X - 125) + ":" + (point.Y - 125) + ")", Colors.Blue);
+            bool added = false;
+
+            if (point.X > 0 && point.Y > 0) {
+                PointCollection.Add(point);
+                added = true;
+            }
+
+            if (buttonsDisplay.Children.Count < 10 && added)
+            {
+                Button b = new Button();
+                b.Click += new RoutedEventHandler(this.button_Click);
+                b.Content = "Change";
+                b.Name = "Button" + PointCollection.IndexOf(point).ToString();
+
+                buttonsDisplay.Children.Add(b);
+
+                TextBox tx = new TextBox();
+                tx.Name = "X" + PointCollection.IndexOf(point).ToString();
+                tx.Text = (point.X - 125).ToString();
+                tx.MaxLength = 4;
+                tx.MaxLines = 1;
+                xDisplay.Children.Add(tx);
+
+                TextBox ty = new TextBox();
+                ty.Name = "Y" + PointCollection.IndexOf(point).ToString();
+                ty.Text = (point.Y - 125).ToString();
+                ty.MaxLength = 4;
+                ty.MaxLines = 1;
+                yDisplay.Children.Add(ty);
+            }
+
+            return new Point(point.X, point.Y);
+        }
+
+        private void GetPoint(object sender, MouseButtonEventArgs e)
+        {
+            GetMousePositionCanvas();
+        }
+
+        protected void button_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            
+            int index = buttonsDisplay.Children.IndexOf((sender as Button));
+            PointCollection[index] = new Point(double.Parse((xDisplay.Children[index] as TextBox).Text) + 125,
+
+            double.Parse((yDisplay.Children[index] as TextBox).Text) + 125);
+            atualizeHUD();
+        }
+
+        public void atualizeHUD()
+        {
+            try {
+                 List<TextBlock> textBlocks = Canvas.Children.OfType<TextBlock>().ToList();
+                 foreach (TextBlock t in textBlocks) {
+                     Canvas.Children.Remove(t);
+                 }
+                 for (int i = 0; i < PointCollection.Count; i++) {
+                     (xDisplay.Children[i] as TextBox).Text = (PointCollection[i].X-125).ToString();
+                     (yDisplay.Children[i] as TextBox).Text = (PointCollection[i].Y-125).ToString();
+                     Text(PointCollection[i].X, PointCollection[i].Y, "(" + (PointCollection[i].X -125) + "," + (PointCollection[i].Y-125) + ")", Colors.Blue);
+                 }
+             } catch {
+             }
+        }
+
+        private void Rotation(object sender, RoutedEventArgs e)
+        {
+            Rotate.Text = Regex.Replace(Rotate.Text, "[^0-9,]+", "", RegexOptions.Compiled);
+            Rotate.Text = (String.IsNullOrEmpty(Rotate.Text) || String.IsNullOrWhiteSpace(Rotate.Text)) ? "0" : Rotate.Text;
+            try
+            {
+                Canvas.Children.Clear();
+                DrawCartesianGrid(25, "#555555");
+                Polygon _p = new Polygon();
+                _p.Fill = new SolidColorBrush(Colors.DarkOrchid);
+                PointCollection = Matrix.MatrixToCollection(
+                                        Matrix.rotate(
+                                            Matrix.CollectionToMatrix(PointCollection, -125, -125),
+                                            double.Parse(Rotate.Text)
+                                        ), 125, 125
+                                    );
+                _p.Points = PointCollection;
+                Canvas.Children.Add(_p);
+                atualizeHUD();
+            }
+            catch
+            {
+            }
+        }
+
+        private void Translation(object sender, RoutedEventArgs e)
+        {
+            TranslateX.Text = Regex.Replace(TranslateX.Text, "[^0-9,]+", "", RegexOptions.Compiled);
+            TranslateX.Text = (String.IsNullOrEmpty(TranslateX.Text) || String.IsNullOrWhiteSpace(TranslateX.Text)) ? "0" : TranslateX.Text;
+            TranslateY.Text = Regex.Replace(TranslateY.Text, "[^0-9,]+", "", RegexOptions.Compiled);
+            TranslateY.Text = (String.IsNullOrEmpty(TranslateY.Text) || String.IsNullOrWhiteSpace(TranslateY.Text)) ? "0" : TranslateY.Text;
+            try
+            {
+                Canvas.Children.Clear();
+                DrawCartesianGrid(25, "#555555");
+                Polygon _p = new Polygon();
+                _p.Fill = new SolidColorBrush(Colors.DarkOrchid);
+                PointCollection = Matrix.MatrixToCollection(
+                                        Matrix.translate(
+                                            Matrix.CollectionToMatrix(PointCollection, 0, 0),
+                                            double.Parse(TranslateY.Text), double.Parse(TranslateY.Text)
+                                        ), 0, 0);
+                _p.Points = PointCollection;
+                Canvas.Children.Add(_p);
+                atualizeHUD();
+            }
+            catch
+            {
+            }
+        }
+
+        private void Scaling(object sender, RoutedEventArgs e)
+        {
+            ScaleX.Text = Regex.Replace(ScaleX.Text, "[^0-9,]+", "", RegexOptions.Compiled);
+            ScaleX.Text = (String.IsNullOrEmpty(ScaleX.Text) || String.IsNullOrWhiteSpace(ScaleX.Text)) ? "1" : ScaleX.Text;
+            ScaleY.Text = Regex.Replace(ScaleY.Text, "[^0-9,]+", "", RegexOptions.Compiled);
+            ScaleY.Text = (String.IsNullOrEmpty(ScaleY.Text) || String.IsNullOrWhiteSpace(ScaleY.Text)) ? "1" : ScaleY.Text;
+            try
+            {
+                Canvas.Children.Clear();
+                DrawCartesianGrid(25, "#555555");
+                Polygon _p = new Polygon();
+                _p.Fill = new SolidColorBrush(Colors.DarkOrchid);
+                PointCollection = Matrix.MatrixToCollection(
+                                        Matrix.scale(
+                                            Matrix.CollectionToMatrix(PointCollection, -125, -125),
+                                            double.Parse(ScaleX.Text), double.Parse(ScaleY.Text)
+                                        ), 125, 125);
+                _p.Points = PointCollection;
+                Canvas.Children.Add(_p);
+                atualizeHUD();
+            }
+            catch
+            {
+            }
+        }
+
+        public void ClearPoints(object sender, RoutedEventArgs e)
+        {
+            PointCollection.Clear();
+            List<TextBlock> textBlocks = Canvas.Children.OfType<TextBlock>().ToList();
+            foreach (TextBlock t in textBlocks)
+            {
+                Canvas.Children.Remove(t);
+            }
+            xDisplay.Children.Clear();
+            yDisplay.Children.Clear();
+            buttonsDisplay.Children.Clear();
+        }
     }
 }
