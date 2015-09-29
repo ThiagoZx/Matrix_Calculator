@@ -15,55 +15,18 @@ using System.Windows.Shapes;
 
 namespace Matrix_Calculator
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
 
     public partial class MainWindow : Window
     {
-
-        private int matrix_ID = 0;
-
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        void returnTextValue() {
+        OperationManager OprtnManager = new OperationManager();
+        PropertiesManager PrprtsManager = new PropertiesManager();
 
-        }
-        void generateGrid(object sender, RoutedEventArgs e)
-        {
-            TextBox line = (TextBox)this.FindName("Line_Input");
-            TextBox column = (TextBox)this.FindName("Column_Input");
-            int lines_int = Convert.ToInt32(line.Text);
-            int column_int = Convert.ToInt32(column.Text);
-
-            if ((lines_int > 10) || (column_int > 10))
-            {
-                MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes de até 10x10", "Calculadora diz:");
-                return;
-            }
-
-            for (int i = 1; i <= lines_int; i++)
-            {
-                for (int j = 1; j <= column_int; j++)
-                {
-
-                    TextBox tb = new TextBox();
-                    tb.Name = ("Matrix_" + i + "_" + j + "_" + matrix_ID).ToString();
-                    tb.Margin = new Thickness(0, 0, 50 + i * 45, 50 + j * 45);
-                    tb.Width = 20; tb.Height = 20;
-                    tb.Text = "0";
-
-                    Tab_01.Children.Add(tb);
-
-                }
-            }
-
-            matrix_ID = matrix_ID < 2 ? matrix_ID++ : matrix_ID = 0;
-        }
+        // <Help Section>
 
         private void HelpGeneral(object sender, RoutedEventArgs e)
         {
@@ -106,5 +69,380 @@ namespace Matrix_Calculator
             HeadLabel.Content = "Matrizes Transpostas:";
             BodyLabel.Text = "Matrizes transpostas são dadas a partir de uma matriz inicial. Ela é igual a inicial a não ser pela ordem de seus índices. Na transposta é trocado, ordenadamente, as linhas por colunas ou as colunas por linhas, de forma que os índices agora inverteram suas posições.";
         }
+
+        // </HelpSection>
+
+        private TextBox getGridElement(Grid grid, string elementName)
+        {
+            object obj = LogicalTreeHelper.FindLogicalNode(grid, elementName);
+
+            return (TextBox)obj;
+        }
+
+        private double getValue(int matrix, string name)
+        {
+            Grid grid = (Grid)FindName("Matrix_0" + matrix);
+            TextBox tbx = getGridElement(grid, name);
+            string text = tbx.Text.ToString();
+            double value = Convert.ToDouble(text);
+
+            return value;
+
+        }
+
+        private void deleteAllTbx(int matrix) { 
+        
+            for(int i = 1; i <= 10; i++){
+                for (int j = 1; j <= 10; j++)
+                {
+                    try
+                    {
+                        Grid grid = (Grid)FindName("Matrix_0" + matrix);
+                        TextBox tbx = getGridElement(grid, "Matrix_" + i + "_" + j + "_" + matrix);
+                        grid.Children.Remove(tbx);
+                    }
+                    catch { 
+                    }
+                }
+            }
+        
+        }
+
+        private bool validadeMatrix(int matrix)
+        {
+            TextBox line = (TextBox)this.FindName("Line_Input_" + matrix);
+            TextBox column = (TextBox)this.FindName("Column_Input_" + matrix);
+            int lines_int = Convert.ToInt32(line.Text);
+            int column_int = Convert.ToInt32(column.Text);
+
+            for (int i = 1; i <= lines_int; i++) {
+                for (int j = 1; j <= column_int; j++) { 
+                    try
+                    {
+                        double Try = getValue(matrix, "Matrix_" + i + "_" + j + "_" + matrix);
+                    }
+                    catch
+                    {
+                        MessageBoxResult result = MessageBox.Show("Você construiu a matriz " + matrix + " com algum elemento incorreto" + i + " " + j, "Calculadora diz:");
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private string[] rtnMatrix(int matrix)
+        {
+            TextBox line = (TextBox)this.FindName("Line_Input_" + matrix);
+            TextBox column = (TextBox)this.FindName("Column_Input_" + matrix);
+            int lines_int = Convert.ToInt32(line.Text);
+            int column_int = Convert.ToInt32(column.Text);
+
+            string[] elements = new string[lines_int * column_int];
+            int index = 0;
+
+            for (int i = 1; i <= lines_int; i++)
+            {
+                for (int j = 1; j <= column_int; j++)
+                {
+                    elements[index] = getValue(matrix, "Matrix_" + i + "_" + j + "_" + matrix).ToString() + "$" + i + "_" + j;
+                    index++;
+                }
+            }
+
+            return elements;
+
+        }
+
+        private string splitElement(string[] matrix, int line, int column)
+        {
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                if (matrix[i].IndexOf(line + "_" + column) != -1)
+                {
+                    string[] splited = matrix[i].Split('$');
+                    return (splited[0]);
+                }
+            }
+
+            return "0";
+        }
+
+        private void generateGrid_1(object sender, RoutedEventArgs e)
+        {
+            deleteAllTbx(1);
+            TextBox line = (TextBox)this.FindName("Line_Input_1");
+            TextBox column = (TextBox)this.FindName("Column_Input_1");
+            int lines_int;
+            int column_int;
+
+            try
+            {
+                lines_int = Convert.ToInt32(line.Text);
+                column_int = Convert.ToInt32(column.Text);
+            }
+            catch
+            {
+                MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes que tenham somente números inteiros em seu índice", "Calculadora diz:");
+                return;
+            }
+
+            if ((lines_int > 10) || (column_int > 10)) {
+                MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes de até 10x10", "Calculadora diz:");
+                return;
+            }
+
+            for (int i = 1; i <= lines_int; i++) {
+                for (int j = 1; j <= column_int; j++) {
+
+                    //Não pergunte.
+                    int margin_top = i - 6;
+                    int margin_left = j - 6;
+                    //Só aceite.
+
+                    TextBox tb = new TextBox();
+                    Matrix_01.Children.Add(tb);
+                    tb.Name = ("Matrix_" + i + "_" + j + "_" + 1).ToString();
+                    tb.Margin = new Thickness(margin_left * 45, margin_top * 45, 0, 0);
+                    tb.Width = 20; tb.Height = 20;
+                    tb.Text = "0";
+
+                    Gerar_01.Margin = new Thickness(87, 108 + i * 22, 0, 0);
+                }
+            }
+        }
+
+        private void generateGrid_2(object sender, RoutedEventArgs e)
+        {
+            deleteAllTbx(2);
+            TextBox line = (TextBox)this.FindName("Line_Input_2");
+            TextBox column = (TextBox)this.FindName("Column_Input_2");
+            int lines_int;
+            int column_int;
+
+            try
+            {
+                lines_int = Convert.ToInt32(line.Text);
+                column_int = Convert.ToInt32(column.Text);
+            }
+            catch
+            {
+                MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes que tenham somente números inteiros em seu índice", "Calculadora diz:");
+                return;
+            }
+
+            if ((lines_int > 10) || (column_int > 10))
+            {
+                MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes de até 10x10", "Calculadora diz:");
+                return;
+            }
+
+            for (int i = 1; i <= lines_int; i++)
+            {
+                for (int j = 1; j <= column_int; j++)
+                {
+                    //Não pergunte.
+                    int margin_top = i - 6;
+                    int margin_left = j - 6;
+                    //Só aceite.
+
+                    TextBox tb = new TextBox();
+                    Matrix_02.Children.Add(tb);
+
+                    tb.Name = ("Matrix_" + i + "_" + j + "_" + 2).ToString();
+                    tb.Margin = new Thickness(margin_left * 45, margin_top * 45, 0, 0);
+                    Gerar_02.Margin = new Thickness(355, 108 + i * 22, 0, 0);
+                    tb.Width = 20; tb.Height = 20;
+                    tb.Text = "0";
+                }
+            }
+        }
+
+        private void generateGrid_3(int lines, int columns, string[] matrix)
+        {
+            deleteAllTbx(3);
+            int index = 0;
+
+            for (int i = 1; i <= lines; i++)
+            {
+                for (int j = 1; j <= columns; j++)
+                {
+
+                    //Não pergunte.
+                    int margin_top = i - 6;
+                    int margin_left = j - 6;
+                    //Só aceite.
+                    string text = "";
+
+                    if (matrix[index].IndexOf("$") != -1)
+                    {
+                        text = splitElement(matrix, i, j);
+                        index++;
+                    }
+                    else
+                    {
+                        text = matrix[index];
+                        index++;
+                    }
+
+                    TextBox tb = new TextBox();
+                    Matrix_03.Children.Add(tb);
+                    tb.Name = ("Matrix_" + i + "_" + j + "_" + 3).ToString();
+                    tb.Margin = new Thickness(margin_left * 45, margin_top * 45, 0, 0);
+                    tb.Width = 20; tb.Height = 20;
+                    tb.Text = text;
+                }
+            }
+        }
+
+        private void Calcular_SelectionChanged(object sender, EventArgs e)
+        {
+            string text = Operation.Text;
+
+            if (text == "Multiplicação escalar") {
+                Factor.Margin = new Thickness(70, 100, 0, 0);
+                x.Margin = new Thickness(60, 100, 0, 0);
+            } else {
+                Factor.Margin = new Thickness(260, 100, -130, 0);
+                x.Margin = new Thickness(260, 100, -130, 0);
+            }
+            
+            switch (text){
+                case "Soma":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = true; Calcular.IsEnabled = true;
+                    break;
+                case "Subtração":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = true; Calcular.IsEnabled = true;
+                    break;
+                case "Multiplicação":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = true; Calcular.IsEnabled = true;
+                    break;
+                case "Multiplicação escalar":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = false; Calcular.IsEnabled = true;
+                    break;
+                case "Inversa":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = false; Calcular.IsEnabled = true;
+                    break;
+                case "Transposta":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = false; Calcular.IsEnabled = true;
+                    break;
+                case "Verificação de simétrica":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = false; Calcular.IsEnabled = true;
+                    break;
+                case "Determinante":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = false; Calcular.IsEnabled = true;
+                    break;
+                case "Oposta":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = false; Calcular.IsEnabled = true;
+                    break;
+                case "Verificação de inversa":
+                    Gerar_01.IsEnabled = true; Gerar_02.IsEnabled = true; Calcular.IsEnabled = true;
+                    break;
+            }
+        }
+
+        private void Calculate(object sender, RoutedEventArgs e)
+        {
+
+            string[] matrix_1 = new string[0]; 
+            string[] matrix_2 = new string[0];
+
+            if(Gerar_02.IsEnabled){
+                if ((validadeMatrix(1)) || (validadeMatrix(2))) {
+                    matrix_1 = rtnMatrix(1);
+                    matrix_2 = rtnMatrix(2);
+                }
+                else
+                {
+                    return;
+                }
+            } else {
+                if (validadeMatrix(1)) {
+                    matrix_1 = rtnMatrix(1);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            string[] result = new string[1];
+            string text = Operation.Text;
+
+            TextBox line_1 = (TextBox)this.FindName("Line_Input_1");
+            TextBox column_1 = (TextBox)this.FindName("Column_Input_1");
+            int lines_int_1 = Convert.ToInt32(line_1.Text);
+            int column_int_1 = Convert.ToInt32(column_1.Text);
+
+            int lines_int_2 = 0;
+            int column_int_2 = 0;
+
+            if (Gerar_02.IsEnabled == true)
+            {
+                TextBox line_2 = (TextBox)this.FindName("Line_Input_2");
+                TextBox column_2 = (TextBox)this.FindName("Column_Input_2");
+                lines_int_2 = Convert.ToInt32(line_2.Text);
+                column_int_2 = Convert.ToInt32(column_2.Text);
+            }
+
+            switch (text)
+            {
+                case "Soma":
+                    result = OprtnManager.sum(lines_int_1, column_int_1, matrix_1, matrix_2);
+                    break;
+
+                case "Subtração":
+                    result = OprtnManager.sbtr(lines_int_1, column_int_1, matrix_1, matrix_2);
+                    break;
+
+                case "Multiplicação":
+                    result = OprtnManager.mult(lines_int_1, column_int_1, lines_int_2, column_int_2, matrix_1, matrix_2);
+                    break;
+
+                case "Multiplicação escalar":
+                    try
+                    {
+                        double factor = Convert.ToDouble(Factor.Text);
+                        result = OprtnManager.multEsc(lines_int_1, column_int_1, factor, matrix_1);
+                    }
+                    catch
+                    {
+                        MessageBoxResult rst = MessageBox.Show("O valor para a multiplicação não é válido! Lembre-se: Decimais são separados por '.' e somente um!", "Calculadora diz:");
+                        return;
+                    }
+                    break;
+
+                case "Inversa":
+                    result = PrprtsManager.inverse(lines_int_1, column_int_1, matrix_1);
+                    break;
+
+                case "Transposta":
+                    result = PrprtsManager.transposed(lines_int_1, column_int_1, matrix_1);
+                    break;
+
+                case "Verificação de simétrica":
+                    bool a = PrprtsManager.isSimetric(lines_int_1, column_int_1, matrix_1);
+                    return;
+
+                case "Determinante":
+                    result[0] = PrprtsManager.determinant(lines_int_1, column_int_1, matrix_1);
+                    generateGrid_3(1, 1, result);
+                    return;
+
+                case "Oposta":
+                    result = PrprtsManager.oposite(lines_int_1, column_int_1, matrix_1);
+                    break;
+
+                case "Verificação de inversa":
+                    bool b = PrprtsManager.isInverse(lines_int_1, column_int_1, matrix_1, matrix_2);
+                    return;
+
+            }
+
+            generateGrid_3(lines_int_1, column_int_1, result);
+            
+        }
+
     }
 }

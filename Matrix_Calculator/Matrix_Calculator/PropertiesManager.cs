@@ -13,37 +13,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Matrix_Calculator
 {
-    public class PropertiesManager
+    public class PropertiesManager : Window
     {
 
-        private double getValue(string name)
+        public string[] transposed(int lines, int columns, string[] matrix)
         {
-
-            TextBox tbx = (TextBox)this.FindName(name);
-            string text = tbx.Text;
-            double value = Convert.ToDouble(text);
-
-            return value;
-
-        }
-
-        public string[] transposed()
-        {
-            TextBox line = (TextBox)this.FindName("Line_Input");
-            TextBox column = (TextBox)this.FindName("Column_Input");
-            int lines = Convert.ToInt32(line.Text);
-            int columns = Convert.ToInt32(column.Text);
 
             string[] results = new string[lines * columns];
+            int index = 0;
 
             for (int i = 1; i <= columns; i++)
             {
                 for (int j = 1; j <= lines; j++)
                 {
-                    double element_a = getValue("Matrix_" + j + "_" + i + "_1");
-                    results[results.Length] = element_a.ToString();
+                    double element_a = splitElement(matrix, j, i);
+                    results[index] = element_a.ToString() + "$" + i + "_" + j;
+                    index++;
                 }
             }
 
@@ -51,22 +39,20 @@ namespace Matrix_Calculator
 
         }
 
-        public string[] oposite()
+        public string[] oposite(int lines, int columns, string[] matrix)
         {
-            TextBox line = (TextBox)this.FindName("Line_Input");
-            TextBox column = (TextBox)this.FindName("Column_Input");
-            int lines = Convert.ToInt32(line.Text);
-            int columns = Convert.ToInt32(column.Text);
 
             string[] results = new string[lines * columns];
+            int index = 0;
 
             for (int i = 1; i <= lines; i++)
             {
                 for (int j = 1; j <= columns; j++)
                 {
-                    double element_a = getValue("Matrix_" + i + "_" + j + "_1");
+                    double element_a = splitElement(matrix, i, j);
                     element_a = element_a * (-1);
-                    results[results.Length] = element_a.ToString();
+                    results[index] = element_a.ToString();
+                    index++;
                 }
             }
 
@@ -74,21 +60,31 @@ namespace Matrix_Calculator
 
         }
 
-        public bool isSimetric(string[] matrix)
+        public bool isSimetric(int lines, int columns, string[] matrix)
         {
-
-            string[] trspd = this.transposed();
-
-            for (int i = 0; i < matrix.Length; i++)
+            if (lines != columns)
             {
-                if (trspd[i] != matrix[i])
+                MessageBoxResult rtn_1 = MessageBox.Show("Essa matriz não é simétrica!", "Calculadora diz:");
+                return false;
+            }
+
+            string[] trspd = this.transposed(lines, columns, matrix);
+
+            for(int i = 1; i <= lines; i++){
+                for (int j = 1; j <= columns; j++)
                 {
-                    MessageBoxResult result = MessageBox.Show("Essa matriz não é simétrica!", "Calculadora diz:");
-                    return false;
+                    string a = splitElement(matrix, i, j).ToString();
+                    string b = splitElement(trspd, i, j).ToString();
+
+                    if (b != a)
+                    {
+                        MessageBoxResult rtn_1 = MessageBox.Show("Essa matriz não é simétrica!", "Calculadora diz:");
+                        return false;
+                    }
                 }
             }
 
-            MessageBoxResult result = MessageBox.Show("Essa matriz é simétrica!", "Calculadora diz:");
+            MessageBoxResult rtn_2 = MessageBox.Show("Essa matriz é simétrica!", "Calculadora diz:");
             return true;
 
         }
@@ -97,34 +93,48 @@ namespace Matrix_Calculator
         {
             for (int i = 0; i < matrix.Length; i++)
             {
-                if (matrix[i].indexOf(line + "_" + column) != -1)
+                try
                 {
-                    string[] splited = matrix[i].Split('$');
-                    return Convert.ToDouble(splited[0]);
+                    if (matrix[i].IndexOf(line + "_" + column) != -1)
+                    {
+                        string[] splited = matrix[i].Split('$');
+                        return Convert.ToDouble(splited[0]);
+                    }
                 }
+                catch { }
             }
 
+            return 0;
         }
 
         private string[] splitMatrix(string[] matrix, int line, int column)
         {
 
-            string[] rstMatrix = new string[matrix.Length - ((Math.Sqrt(matrix.Length) * 2) - 1)];
+            string[] rstMatrix = new string[Convert.ToInt32(matrix.Length - ((Math.Sqrt(matrix.Length) * 2) - 1))];
+
+            int crt_line = 1;
+            int crt_column = 1;
+            int index = 0;
 
             for (int i = 0; i < matrix.Length; i++)
             {
-                if ((matrix[i].indexOf("_" + column) == -1)(matrix[i].indexOf(line + "_") == -1))
+                if ((matrix[i].IndexOf(line + "_" + column) == -1) && (matrix[i].IndexOf("_" + column) == -1) && (matrix[i].IndexOf(line + "_") == -1))
                 {
+
                     string[] splited = matrix[i].Split('$');
-                    rstMatrix[rstMatrix.Length] = splited[0] + "$" + line + "_" + column;
-                    if ((column + 1) > Math.Sqrt(rstMatrix.Length))
+                    rstMatrix[index] = splited[0] + "$" + crt_line + "_" + crt_column;
+                    index++;
+
+                    if ((crt_column + 1) > Math.Sqrt(rstMatrix.Length))
                     {
-                        line++; column = 1;
+                        crt_line++; crt_column = 1;
                     }
                     else
                     {
-                        column++;
+                        crt_column++;
                     }
+                    
+
                 }
             }
 
@@ -140,28 +150,24 @@ namespace Matrix_Calculator
             switch (elements.Length)
             {
                 case 1:
-                    return (Math.Pow((-1), line + column) * getValue("Matrix_1_1_1")).ToString();
-                    break;
+                    return (Math.Pow((-1), line + column) * splitElement(matrix, 1, 1)).ToString();
 
                 case 4:
                     return (Math.Pow((-1), line + column) * Convert.ToDouble(determinant_n2(elements))).ToString();
-                    break;
 
                 case 9:
-                    return (Math.Pow((-1), line + column) * Convert.ToDouble(determinant_n3(elements))).ToString();
-                    break;
+                    return (Math.Pow((-1), line + column) * Convert.ToDouble(determinant_nn(elements))).ToString();
 
                 default:
                     return (Math.Pow((-1), line + column) * Convert.ToDouble(determinant_nn(elements))).ToString();
-                    break;
             }
 
         }
 
         private string determinant_n2(string[] matrix)
         {
-            double princ = Convert.ToDouble(matrix[0]) * Convert.ToDouble(matrix[3]);
-            double secnd = Convert.ToDouble(matrix[1]) * Convert.ToDouble(matrix[2]);
+            double princ = splitElement(matrix, 1, 1) * splitElement(matrix, 2, 2);
+            double secnd = splitElement(matrix, 1, 2) * splitElement(matrix, 2, 1);
 
             double dtrmnt = princ - secnd;
 
@@ -207,7 +213,7 @@ namespace Matrix_Calculator
             }
 
             string toReturn = (princ.Sum() - secnd.Sum()).ToString();
-            return toReturn.ToString();
+            return toReturn;
 
         }
 
@@ -226,12 +232,8 @@ namespace Matrix_Calculator
 
         }
 
-        public string determinant()
+        public string determinant(int lines, int columns, string[] matrix)
         {
-            TextBox line = (TextBox)this.FindName("Line_Input");
-            TextBox column = (TextBox)this.FindName("Column_Input");
-            int lines = Convert.ToInt32(line.Text);
-            int columns = Convert.ToInt32(column.Text);
 
             if (lines != columns)
             {
@@ -240,54 +242,50 @@ namespace Matrix_Calculator
             }
 
             string[] elements = new string[lines * columns];
+            int index = 0;
 
             for (int i = 1; i <= lines; i++)
             {
                 for (int j = 1; j <= columns; j++)
                 {
-                    string element_a = getValue("Matrix_" + i + "_" + j + "_1").ToString();
+                    string element_a = splitElement(matrix, i, j).ToString();
                     element_a = element_a + "$" + i + "_" + j;
-                    elements[elements.Length] = element_a.ToString();
+                    elements[index] = element_a;
+                    index++;
                 }
             }
 
             switch (lines * columns)
             {
                 case 1:
-                    return getValue("Matrix_1_1_1").ToString();
-                    break;
+                    return splitElement(matrix, 1, 1).ToString();
 
                 case 4:
                     return determinant_n2(elements);
-                    break;
 
                 case 9:
-                    return determinant_n3(elements);
-                    break;
+                    return determinant_nn(elements);
 
                 default:
                     return determinant_nn(elements);
-                    break;
             }
 
         }
 
-        public string[] inverse()
+        public string[] inverse(int lines, int columns, string[] matrix)
         {
-            TextBox line = (TextBox)this.FindName("Line_Input");
-            TextBox column = (TextBox)this.FindName("Column_Input");
-            int lines = Convert.ToInt32(line.Text);
-            int columns = Convert.ToInt32(column.Text);
 
             string[] elements = new string[lines * columns];
+            int index = 0;
 
             for (int i = 1; i <= lines; i++)
             {
                 for (int j = 1; j <= columns; j++)
                 {
-                    string element_a = getValue("Matrix_" + i + "_" + j + "_1").ToString();
+                    string element_a = splitElement(matrix, i, j).ToString();
                     element_a = element_a + "$" + i + "_" + j;
-                    elements[elements.Length] = element_a.ToString();
+                    elements[index] = element_a.ToString();
+                    index++;
                 }
             }
 
@@ -297,19 +295,20 @@ namespace Matrix_Calculator
             {
                 MessageBoxResult result = MessageBox.Show("Essa matriz não possui inversa!", "Calculadora diz:");
                 string[] badresult = new string[1];
-                badresult[badresult.Length] = "Bad Result!";
                 return badresult;
             }
 
-            string cofactors = new string[lines * columns];
+            string[] cofactors = new string[lines * columns];
 
+            index = 0;
             for (int i = 1; i <= lines; i++)
             {
                 for (int j = 1; j <= columns; j++)
                 {
-                    double cofactor = Convert.ToDouble(cofactor(elements, i, j));
-                    cofactor = cofactor * 1 / dtrmnt;
-                    cofactors[cofactors.Length] = cofactor.ToString();
+                    double cftr = Convert.ToDouble(cofactor(elements, i, j));
+                    cftr = cftr * 1 / dtrmnt;
+                    cofactors[index] = cftr.ToString();
+                    index++;
                 }
             }
 
@@ -317,36 +316,22 @@ namespace Matrix_Calculator
 
         }
 
-        public bool isInverse()
+        public bool isInverse(int lines, int columns, string[] matrix_1, string[] matrix_2)
         {
-            TextBox line = (TextBox)this.FindName("Line_Input_2");
-            TextBox column = (TextBox)this.FindName("Column_Input_2");
-            int lines = Convert.ToInt32(line.Text);
-            int columns = Convert.ToInt32(column.Text);
 
-            string[] invrs = new string[lines * columns];
-            string[] matrix = this.inverse();
+            string[] matrix = this.inverse(lines, columns, matrix_1);
 
-            for (int i = 1; i <= lines; i++)
-            {
-                for (int j = 1; j <= columns; j++)
-                {
-                    double element_a = getValue("Matrix_" + i + "_" + j + "_2");
-                    element_a = element_a * (-1);
-                    results[results.Length] = element_a.ToString();
-                }
-            }
 
             for (int i = 0; i < matrix.Length; i++)
             {
-                if (invrs[i] != matrix[i])
+                if (matrix_2[i] != matrix[i])
                 {
-                    MessageBoxResult result = MessageBox.Show("Essa matriz não é inversa à primeira!", "Calculadora diz:");
+                    MessageBoxResult rtn_1 = MessageBox.Show("Essa matriz não é inversa à primeira!", "Calculadora diz:");
                     return false;
                 }
             }
 
-            MessageBoxResult result = MessageBox.Show("Essa matriz é inversa à segunda!", "Calculadora diz:");
+            MessageBoxResult rtn_2 = MessageBox.Show("Essa matriz é inversa à segunda!", "Calculadora diz:");
             return true;
 
         }
