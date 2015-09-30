@@ -35,12 +35,12 @@ namespace Matrix_Calculator
 
         public static Matrix scale(Matrix m, double x, double y)
         {
-            Matrix _matrix = new Matrix(2, 2);
-            _matrix.setValue(0, 0, x);
-            _matrix.setValue(0, 1, 0);
-            _matrix.setValue(1, 0, 0);
-            _matrix.setValue(1, 1, y);
-            return multiply(_matrix, m);
+            Matrix matrix = new Matrix(2, 2);
+            matrix.setValue(0, 0, x);
+            matrix.setValue(0, 1, 0);
+            matrix.setValue(1, 0, 0);
+            matrix.setValue(1, 1, y);
+            return multiply(matrix, m);
         }
 
         public static Matrix translate(Matrix m, double x, double y)
@@ -63,15 +63,6 @@ namespace Matrix_Calculator
             r.setValue(1, 1, Math.Round(Math.Cos(angle * (Math.PI / 180)), 2));
             return multiply(r, m);
 
-        }
-
-        public static double Eval(string expression)
-        {
-            DataTable t = new DataTable();
-            t.Columns.Add("expression", typeof(string), expression);
-            DataRow row = t.NewRow();
-            t.Rows.Add(row);
-            return double.Parse((string)row["expression"]);
         }
 
         public static Matrix CollectionToMatrix(PointCollection PC, double xOffset, double yOffSet)

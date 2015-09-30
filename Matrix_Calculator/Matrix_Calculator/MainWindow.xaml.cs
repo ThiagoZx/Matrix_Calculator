@@ -217,8 +217,6 @@ namespace Matrix_Calculator
                     tb.Margin = new Thickness(margin_left * 45, margin_top * 45, 0, 0);
                     tb.Width = 20; tb.Height = 20;
                     tb.Text = "0";
-
-                    Gerar_01.Margin = new Thickness(87, 108 + i * 22, 0, 0);
                 }
             }
         }
@@ -262,7 +260,6 @@ namespace Matrix_Calculator
 
                     tb.Name = ("Matrix_" + i + "_" + j + "_" + 2).ToString();
                     tb.Margin = new Thickness(margin_left * 45, margin_top * 45, 0, 0);
-                    Gerar_02.Margin = new Thickness(355, 108 + i * 22, 0, 0);
                     tb.Width = 20; tb.Height = 20;
                     tb.Text = "0";
                 }
@@ -454,6 +451,8 @@ namespace Matrix_Calculator
             
         }
 
+        //<Canvas Section>
+
         public void DrawLine(int X1, int Y1, int X2, int Y2, String color, int thickness)
         {
             Line line = new Line();
@@ -504,8 +503,8 @@ namespace Matrix_Calculator
             if (buttonsDisplay.Children.Count < 10 && added)
             {
                 Button b = new Button();
-                b.Click += new RoutedEventHandler(this.button_Click);
-                b.Content = "Change";
+                b.Click += new RoutedEventHandler(this.ButtonClick);
+                b.Content = "Mudar";
                 b.Name = "Button" + PointCollection.IndexOf(point).ToString();
 
                 buttonsDisplay.Children.Add(b);
@@ -533,7 +532,7 @@ namespace Matrix_Calculator
             GetMousePositionCanvas();
         }
 
-        protected void button_Click(object sender, RoutedEventArgs e)
+        protected void ButtonClick(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             
@@ -541,10 +540,10 @@ namespace Matrix_Calculator
             PointCollection[index] = new Point(double.Parse((xDisplay.Children[index] as TextBox).Text) + 125,
 
             double.Parse((yDisplay.Children[index] as TextBox).Text) + 125);
-            atualizeHUD();
+            HudUpdate();
         }
 
-        public void atualizeHUD()
+        public void HudUpdate()
         {
             try {
                  List<TextBlock> textBlocks = Canvas.Children.OfType<TextBlock>().ToList();
@@ -568,17 +567,12 @@ namespace Matrix_Calculator
             {
                 Canvas.Children.Clear();
                 DrawCartesianGrid(25, "#555555");
-                Polygon _p = new Polygon();
-                _p.Fill = new SolidColorBrush(Colors.DarkOrchid);
-                PointCollection = Matrix.MatrixToCollection(
-                                        Matrix.rotate(
-                                            Matrix.CollectionToMatrix(PointCollection, -125, -125),
-                                            double.Parse(Rotate.Text)
-                                        ), 125, 125
-                                    );
-                _p.Points = PointCollection;
-                Canvas.Children.Add(_p);
-                atualizeHUD();
+                Polygon p = new Polygon();
+                p.Fill = new SolidColorBrush(Colors.DarkOrchid);
+                PointCollection = Matrix.MatrixToCollection( Matrix.rotate( Matrix.CollectionToMatrix(PointCollection, -125, -125), double.Parse(Rotate.Text)), 125, 125);
+                p.Points = PointCollection;
+                Canvas.Children.Add(p);
+                HudUpdate();
             }
             catch
             {
@@ -595,16 +589,12 @@ namespace Matrix_Calculator
             {
                 Canvas.Children.Clear();
                 DrawCartesianGrid(25, "#555555");
-                Polygon _p = new Polygon();
-                _p.Fill = new SolidColorBrush(Colors.DarkOrchid);
-                PointCollection = Matrix.MatrixToCollection(
-                                        Matrix.translate(
-                                            Matrix.CollectionToMatrix(PointCollection, 0, 0),
-                                            double.Parse(TranslateY.Text), double.Parse(TranslateY.Text)
-                                        ), 0, 0);
-                _p.Points = PointCollection;
-                Canvas.Children.Add(_p);
-                atualizeHUD();
+                Polygon p = new Polygon();
+                p.Fill = new SolidColorBrush(Colors.DarkOrchid);
+                PointCollection = Matrix.MatrixToCollection( Matrix.translate( Matrix.CollectionToMatrix(PointCollection, 0, 0), double.Parse(TranslateY.Text), double.Parse(TranslateY.Text)), 0, 0);
+                p.Points = PointCollection;
+                Canvas.Children.Add(p);
+                HudUpdate();
             }
             catch
             {
@@ -621,16 +611,12 @@ namespace Matrix_Calculator
             {
                 Canvas.Children.Clear();
                 DrawCartesianGrid(25, "#555555");
-                Polygon _p = new Polygon();
-                _p.Fill = new SolidColorBrush(Colors.DarkOrchid);
-                PointCollection = Matrix.MatrixToCollection(
-                                        Matrix.scale(
-                                            Matrix.CollectionToMatrix(PointCollection, -125, -125),
-                                            double.Parse(ScaleX.Text), double.Parse(ScaleY.Text)
-                                        ), 125, 125);
-                _p.Points = PointCollection;
-                Canvas.Children.Add(_p);
-                atualizeHUD();
+                Polygon p = new Polygon();
+                p.Fill = new SolidColorBrush(Colors.DarkOrchid);
+                PointCollection = Matrix.MatrixToCollection( Matrix.scale( Matrix.CollectionToMatrix(PointCollection, -125, -125), double.Parse(ScaleX.Text), double.Parse(ScaleY.Text) ), 125, 125);
+                p.Points = PointCollection;
+                Canvas.Children.Add(p);
+                HudUpdate();
             }
             catch
             {
@@ -649,5 +635,7 @@ namespace Matrix_Calculator
             yDisplay.Children.Clear();
             buttonsDisplay.Children.Clear();
         }
+
+        //</Canvas Section>
     }
 }
