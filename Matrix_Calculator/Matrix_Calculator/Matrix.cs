@@ -23,6 +23,33 @@ namespace Matrix_Calculator
             array = new double[rowN, columN];
         }
 
+        public Matrix(int rowN, int columN, string formula)
+        {
+            rows = rowN;
+            columns = columN;
+            array = new double[rowN, columN];
+
+            for (int i = 0; i < rowN; i++) {
+                for (int j = 0; j < columN; j++) {
+                    string a = formula.Replace("i", (i + 1).ToString());
+                    a = a.Replace("j", (j + 1).ToString());
+
+                    setValue(i, j, Eval(a));
+                }
+            }
+        }
+
+        public static double Eval(string expression)
+        {
+            DataTable t = new DataTable();
+            t.Columns.Add("expression", typeof(string), expression);
+
+            DataRow row = t.NewRow();
+            t.Rows.Add(row);
+
+            return double.Parse((string)row["expression"]);
+        }
+
         public double getValue(int i, int j)
         {
             return array[i, j];

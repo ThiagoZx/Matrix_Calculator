@@ -472,6 +472,7 @@ namespace Matrix_Calculator
             TextBlock textBlock = new TextBlock();
             textBlock.Text = text;
             textBlock.Foreground = new SolidColorBrush(color);
+
             Canvas.SetLeft(textBlock, x);
             Canvas.SetTop(textBlock, y);
             Canvas.Children.Add(textBlock);
@@ -479,8 +480,7 @@ namespace Matrix_Calculator
 
         public void DrawCartesianGrid(int size, string color)
         {
-            for (int i = 0; i < 11; i++)
-            {
+            for (int i = 0; i < 11; i++) {
                 DrawLine(size * i, 0, size * i, 250, color, 1);
                 DrawLine(0, size * i, 250, size * i, color, 1);
             }
@@ -500,8 +500,7 @@ namespace Matrix_Calculator
                 added = true;
             }
 
-            if (buttonsDisplay.Children.Count < 10 && added)
-            {
+            if (buttonsDisplay.Children.Count < 10 && added) {
                 Button b = new Button();
                 b.Click += new RoutedEventHandler(this.ButtonClick);
                 b.Content = "Mudar";
@@ -547,9 +546,11 @@ namespace Matrix_Calculator
         {
             try {
                  List<TextBlock> textBlocks = Canvas.Children.OfType<TextBlock>().ToList();
+
                  foreach (TextBlock t in textBlocks) {
                      Canvas.Children.Remove(t);
                  }
+
                  for (int i = 0; i < PointCollection.Count; i++) {
                      (xDisplay.Children[i] as TextBox).Text = (PointCollection[i].X-125).ToString();
                      (yDisplay.Children[i] as TextBox).Text = (PointCollection[i].Y-125).ToString();
@@ -563,19 +564,19 @@ namespace Matrix_Calculator
         {
             Rotate.Text = Regex.Replace(Rotate.Text, "[^0-9,]+", "", RegexOptions.Compiled);
             Rotate.Text = (String.IsNullOrEmpty(Rotate.Text) || String.IsNullOrWhiteSpace(Rotate.Text)) ? "0" : Rotate.Text;
-            try
-            {
+
+            try {
                 Canvas.Children.Clear();
                 DrawCartesianGrid(25, "#555555");
+
                 Polygon p = new Polygon();
                 p.Fill = new SolidColorBrush(Colors.DarkOrchid);
                 PointCollection = Matrix.MatrixToCollection( Matrix.rotate( Matrix.CollectionToMatrix(PointCollection, -125, -125), double.Parse(Rotate.Text)), 125, 125);
                 p.Points = PointCollection;
                 Canvas.Children.Add(p);
+
                 HudUpdate();
-            }
-            catch
-            {
+            } catch {
             }
         }
 
@@ -585,19 +586,19 @@ namespace Matrix_Calculator
             TranslateX.Text = (String.IsNullOrEmpty(TranslateX.Text) || String.IsNullOrWhiteSpace(TranslateX.Text)) ? "0" : TranslateX.Text;
             TranslateY.Text = Regex.Replace(TranslateY.Text, "[^0-9,]+", "", RegexOptions.Compiled);
             TranslateY.Text = (String.IsNullOrEmpty(TranslateY.Text) || String.IsNullOrWhiteSpace(TranslateY.Text)) ? "0" : TranslateY.Text;
-            try
-            {
+
+            try {
                 Canvas.Children.Clear();
                 DrawCartesianGrid(25, "#555555");
+
                 Polygon p = new Polygon();
                 p.Fill = new SolidColorBrush(Colors.DarkOrchid);
                 PointCollection = Matrix.MatrixToCollection( Matrix.translate( Matrix.CollectionToMatrix(PointCollection, 0, 0), double.Parse(TranslateY.Text), double.Parse(TranslateY.Text)), 0, 0);
                 p.Points = PointCollection;
                 Canvas.Children.Add(p);
+
                 HudUpdate();
-            }
-            catch
-            {
+            } catch {
             }
         }
 
@@ -607,19 +608,19 @@ namespace Matrix_Calculator
             ScaleX.Text = (String.IsNullOrEmpty(ScaleX.Text) || String.IsNullOrWhiteSpace(ScaleX.Text)) ? "1" : ScaleX.Text;
             ScaleY.Text = Regex.Replace(ScaleY.Text, "[^0-9,]+", "", RegexOptions.Compiled);
             ScaleY.Text = (String.IsNullOrEmpty(ScaleY.Text) || String.IsNullOrWhiteSpace(ScaleY.Text)) ? "1" : ScaleY.Text;
-            try
-            {
+
+            try {
                 Canvas.Children.Clear();
                 DrawCartesianGrid(25, "#555555");
+
                 Polygon p = new Polygon();
                 p.Fill = new SolidColorBrush(Colors.DarkOrchid);
                 PointCollection = Matrix.MatrixToCollection( Matrix.scale( Matrix.CollectionToMatrix(PointCollection, -125, -125), double.Parse(ScaleX.Text), double.Parse(ScaleY.Text) ), 125, 125);
                 p.Points = PointCollection;
                 Canvas.Children.Add(p);
+
                 HudUpdate();
-            }
-            catch
-            {
+            } catch {
             }
         }
 
@@ -627,15 +628,81 @@ namespace Matrix_Calculator
         {
             PointCollection.Clear();
             List<TextBlock> textBlocks = Canvas.Children.OfType<TextBlock>().ToList();
-            foreach (TextBlock t in textBlocks)
-            {
+
+            foreach (TextBlock t in textBlocks) {
                 Canvas.Children.Remove(t);
             }
+
             xDisplay.Children.Clear();
             yDisplay.Children.Clear();
             buttonsDisplay.Children.Clear();
         }
 
         //</Canvas Section>
+
+        //<Formula Section>
+
+        public void Formula(ref TextBox fT, ref Grid Matrix, int numb)
+        {
+            Matrix temp;
+            try {
+                deleteAllTbx(numb);
+                TextBox line = (TextBox)this.FindName("Line_Input_" + numb.ToString());
+                TextBox column = (TextBox)this.FindName("Column_Input_" + numb.ToString());
+                int lines_int;
+                int column_int;
+
+                try
+                {
+                    lines_int = Convert.ToInt32(line.Text);
+                    column_int = Convert.ToInt32(column.Text);
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes que tenham somente números inteiros em seu índice", "Calculadora diz:");
+                    return;
+                }
+
+                if ((lines_int > 10) || (column_int > 10))
+                {
+                    MessageBoxResult result = MessageBox.Show("Sinto muito! Só aceitamos matrizes de até 10x10", "Calculadora diz:");
+                    return;
+                }
+
+                temp = new Matrix(lines_int, column_int, fT.Text);
+
+                for (int i = 1; i <= lines_int; i++)
+                {
+                    for (int j = 1; j <= column_int; j++)
+                    {
+
+                        //Não pergunte.
+                        int margin_top = i - 6;
+                        int margin_left = j - 6;
+                        //Só aceite.
+
+                        TextBox tb = new TextBox();
+                        Matrix.Children.Add(tb);
+                        tb.Name = ("Matrix_" + i + "_" + j + "_" + numb.ToString()).ToString();
+                        tb.Margin = new Thickness(margin_left * 45, margin_top * 45, 0, 0);
+                        tb.Width = 20; tb.Height = 20;
+                        tb.Text = temp.array[(i - 1), (j - 1)].ToString();
+                    }
+                }
+            } catch {
+            }
+        }
+
+        private void GetFormula1(object sender, RoutedEventArgs e)
+        {
+            Formula(ref Formula1, ref Matrix_01, 1);
+        }
+
+        private void GetFormula2(object sender, RoutedEventArgs e)
+        {
+            Formula(ref Formula2, ref Matrix_02, 2);
+        }
+
+        //</Formula Section>
     }
 }
