@@ -274,39 +274,36 @@ namespace Matrix_Calculator
         public string[] inverse(int lines, int columns, string[] matrix)
         {
 
-            string[] elements = new string[lines * columns];
+            string[] elements = matrix;
             int index = 0;
 
-            for (int i = 1; i <= lines; i++)
-            {
-                for (int j = 1; j <= columns; j++)
-                {
-                    string element_a = splitElement(matrix, i, j).ToString();
-                    element_a = element_a + "$" + i + "_" + j;
-                    elements[index] = element_a.ToString();
-                    index++;
-                }
+            if (lines != columns) {
+                MessageBoxResult result = MessageBox.Show ("Somente matrizes quadradas possuem inversas!", "Calculadora diz:");
+                string[] badresult = new string[1];
+                badresult[0] = "badresult";
+                return badresult;
             }
 
             double dtrmnt = Convert.ToDouble(determinant_nn(elements));
 
-            if (dtrmnt == 0 || lines != columns)
-            {
-                MessageBoxResult result = MessageBox.Show("Essa matriz não possui inversa!", "Calculadora diz:");
+            if (dtrmnt == 0) {
+                MessageBoxResult result = MessageBox.Show ("Essa matriz não possui inversa!", "Calculadora diz:");
                 string[] badresult = new string[1];
+                badresult[0] = "badresult";
                 return badresult;
             }
 
             string[] cofactors = new string[lines * columns];
 
             index = 0;
+
             for (int i = 1; i <= lines; i++)
             {
                 for (int j = 1; j <= columns; j++)
                 {
                     double cftr = Convert.ToDouble(cofactor(elements, i, j));
-                    cftr = cftr * 1 / dtrmnt;
-                    cofactors[index] = cftr.ToString();
+                    cftr = cftr/ dtrmnt;
+                    cofactors[index] = cftr + "$" + i + "_" + j;
                     index++;
                 }
             }

@@ -120,11 +120,19 @@ namespace Matrix_Calculator
 
         private bool validadeMatrix(int matrix)
         {
-            TextBox line = (TextBox)this.FindName("Line_Input_" + matrix);
-            TextBox column = (TextBox)this.FindName("Column_Input_" + matrix);
-            int lines_int = Convert.ToInt32(line.Text);
-            int column_int = Convert.ToInt32(column.Text);
 
+            int lines_int = 0;
+            int column_int = 0;
+
+            try {
+                TextBox line = (TextBox)this.FindName ("Line_Input_" + matrix);
+                TextBox column = (TextBox)this.FindName ("Column_Input_" + matrix);
+                lines_int = Convert.ToInt32 (line.Text);
+                column_int = Convert.ToInt32 (column.Text);
+            } catch {
+                MessageBoxResult result = MessageBox.Show ("Para executar tal operação, deve preencher as duas matrizes corretamente", "Calculadora diz:");
+            }
+            
             for (int i = 1; i <= lines_int; i++) {
                 for (int j = 1; j <= column_int; j++) { 
                     try
@@ -144,10 +152,17 @@ namespace Matrix_Calculator
 
         private string[] rtnMatrix(int matrix)
         {
-            TextBox line = (TextBox)this.FindName("Line_Input_" + matrix);
-            TextBox column = (TextBox)this.FindName("Column_Input_" + matrix);
-            int lines_int = Convert.ToInt32(line.Text);
-            int column_int = Convert.ToInt32(column.Text);
+            int lines_int = 0;
+            int column_int = 0;
+
+            try {
+                TextBox line = (TextBox)this.FindName ("Line_Input_" + matrix);
+                TextBox column = (TextBox)this.FindName ("Column_Input_" + matrix);
+                lines_int = Convert.ToInt32 (line.Text);
+                column_int = Convert.ToInt32 (column.Text);
+            } catch {
+                MessageBoxResult result = MessageBox.Show ("Para executar tal operação, deve preencher as duas matrizes corretamente", "Calculadora diz:");
+            }
 
             string[] elements = new string[lines_int * column_int];
             int index = 0;
@@ -191,6 +206,10 @@ namespace Matrix_Calculator
             {
                 lines_int = Convert.ToInt32(line.Text);
                 column_int = Convert.ToInt32(column.Text);
+                if (lines_int <= 0 || column_int <= 0) {
+                    MessageBoxResult result = MessageBox.Show ("Sinto muito! Que tal colocar números inteiros positivos não nulos como índice?", "Calculadora diz:");
+                    return;
+                }
             }
             catch
             {
@@ -233,6 +252,10 @@ namespace Matrix_Calculator
             {
                 lines_int = Convert.ToInt32(line.Text);
                 column_int = Convert.ToInt32(column.Text);
+                if (lines_int <= 0 || column_int <= 0) {
+                    MessageBoxResult result = MessageBox.Show ("Sinto muito! Que tal colocar números inteiros positivos não nulos como índice?", "Calculadora diz:");
+                    return;
+                }
             }
             catch
             {
@@ -278,7 +301,7 @@ namespace Matrix_Calculator
 
                     //Não pergunte.
                     int margin_top = i - 6;
-                    int margin_left = j - 6;
+                    int margin_left = j - 2;
                     //Só aceite.
                     string text = "";
 
@@ -296,8 +319,8 @@ namespace Matrix_Calculator
                     TextBox tb = new TextBox();
                     Matrix_03.Children.Add(tb);
                     tb.Name = ("Matrix_" + i + "_" + j + "_" + 3).ToString();
-                    tb.Margin = new Thickness(margin_left * 45, margin_top * 45, 0, 0);
-                    tb.Width = 20; tb.Height = 20;
+                    tb.Margin = new Thickness (margin_left * 85, margin_top * 45, 0, 0);
+                    tb.Width = 40; tb.Height = 20;
                     tb.Text = text;
                 }
             }
@@ -355,7 +378,7 @@ namespace Matrix_Calculator
             string[] matrix_1 = new string[0]; 
             string[] matrix_2 = new string[0];
 
-            if(Gerar_02.IsEnabled){
+            if(Gerar_02.IsEnabled) {
                 if ((validadeMatrix(1)) || (validadeMatrix(2))) {
                     matrix_1 = rtnMatrix(1);
                     matrix_2 = rtnMatrix(2);
@@ -422,10 +445,21 @@ namespace Matrix_Calculator
 
                 case "Inversa":
                     result = PrprtsManager.inverse(lines_int_1, column_int_1, matrix_1);
+
+                    if (result[0] == "badresult") {
+                        return;
+                    }
+
+                    result = PrprtsManager.transposed (lines_int_1, column_int_1, result);
                     break;
 
                 case "Transposta":
                     result = PrprtsManager.transposed(lines_int_1, column_int_1, matrix_1);
+                    if (lines_int_1 != column_int_1) {
+                        int temp = lines_int_1;
+                        lines_int_1 = column_int_1;
+                        column_int_1 = temp;
+                    }
                     break;
 
                 case "Verificação de simétrica":
